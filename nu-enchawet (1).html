@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="am" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#8B1A1A">
+<meta name="description" content="ኑ እንጫወት — Ethiopian social card game. Play with family and friends.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ኑ እንጫወት">
+<meta property="og:title" content="ኑ እንጫወት">
+<meta property="og:description" content="Ethiopian social card game for family and friends">
+<meta property="og:type" content="website">
+<link rel="manifest" href="#" id="manifest-link">
+<title>ኑ እንጫወት 🎴</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Ethiopic:wght@400;700;900&family=Noto+Sans+Ethiopic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES — Ethiopian Heritage Palette
+   Inspired by: Tej (honey wine), Berbere spice, Injera
+   parchment, Nile River green, Lalibela Axum stone.
+═══════════════════════════════════════════════════════ */
+:root {
+  /* ── Core Brand ── */
+  --injera:        #F5EDD6;
+  --injera-warm:   #EFE0B8;
+  --injera-dark:   #D9C99A;
+  --tej:           #C8960C;
+  --tej-light:     #F0B429;
+  --tej-pale:      #FDE68A;
+  --berbere:       #8B1A1A;
+  --berbere-mid:   #B22222;
+  --berbere-light: #DC2626;
+  --earth:         #5C3D1E;
+  --earth-light:   #8B6340;
+  --smoke:         #4A4035;
+  --smoke-light:   #7A6E62;
+  --cream:         #FDFAF3;
+  --ink:           #1A1410;
+  /* ── Flag Colors ── */
+  --flag-grn:      #078930;
+  --flag-yel:      #FCDD09;
+  --flag-red:      #DA121A;
+  /* ── Card Types ── */
+  --type-q:        #1A5276;
+  --type-t:        #4A235A;
+  --type-c:        #8B1A1A;
+  /* ── Rarity ── */
+  --rare:          #9B59B6;
+  --epic:          #E74C3C;
+  /* ── Layout ── */
+  --max-w:         480px;
+  --r-card:        20px;
+  --r:             14px;
+  --r-sm:          8px;
+  --shadow:        0 8px 40px rgba(90,50,10,0.22), 0 2px 8px rgba(90,50,10,0.12);
+  --font-serif:    'Noto Serif Ethiopic', Georgia, serif;
+  --font-sans:     'Noto Sans Ethiopic', sans-serif;
+}
+
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
+body{
+  font-family:var(--font-sans);
+  background:var(--injera);
+  color:var(--ink);
+  min-height:100dvh;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ── Injera texture + subtle cross pattern bg ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(circle at 18% 25%,rgba(200,150,12,0.07) 0%,transparent 48%),
+    radial-gradient(circle at 82% 75%,rgba(139,26,26,0.06) 0%,transparent 48%),
+    url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Ccircle cx='40' cy='40' r='1.2' fill='%23C8960C' fill-opacity='0.07'/%3E%3Ccircle cx='10' cy='10' r='0.9' fill='%23C8960C' fill-opacity='0.05'/%3E%3Ccircle cx='70' cy='70' r='0.9' fill='%23C8960C' fill-opacity='0.05'/%3E%3Crect x='38' y='20' width='4' height='40' fill='%238B1A1A' fill-opacity='0.025'/%3E%3Crect x='20' y='38' width='40' height='4' fill='%238B1A1A' fill-opacity='0.025'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:80px 80px;
+}
+
+/* ══ LAYOUT ══ */
+#app{
+  position:relative;z-index:1;
+  min-height:100dvh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 16px 100px;
+  max-width:var(--max-w);margin:0 auto;
+}
+
+/* ══ HEADER ══ */
+header{
+  width:100%;text-align:center;padding:22px 0 10px;
+}
+.flag-bar{
+  display:flex;height:3px;width:100%;
+  border-radius:99px;overflow:hidden;margin-bottom:14px;
+}
+.flag-bar span:nth-child(1){flex:1;background:var(--flag-grn)}
+.flag-bar span:nth-child(2){flex:1;background:var(--flag-yel)}
+.flag-bar span:nth-child(3){flex:1;background:var(--flag-red)}
+.header-icon{
+  font-size:2.6rem;display:block;margin-bottom:4px;
+  filter:drop-shadow(0 2px 8px rgba(139,26,26,0.3));
+}
+.game-title{
+  font-family:var(--font-serif);
+  font-size:2.1rem;font-weight:900;
+  color:var(--berbere);letter-spacing:-0.5px;line-height:1.1;
+  text-shadow:0 1px 0 rgba(255,255,255,0.5);
+}
+.game-subtitle{
+  font-size:0.8rem;color:var(--earth-light);
+  margin-top:4px;letter-spacing:0.4px;
+}
+
+/* Tibeb weave divider */
+.tibeb{
+  width:100%;height:14px;margin:8px 0;
+  display:flex;align-items:center;justify-content:center;gap:4px;opacity:0.55;
+}
+.tibeb span{
+  display:inline-block;width:6px;height:6px;
+  background:var(--tej);transform:rotate(45deg);
+}
+.tibeb::before,.tibeb::after{
+  content:'';flex:1;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--tej),transparent);
+}
+
+/* ══ STAGE BAR ══ */
+.stage-bar{
+  width:100%;
+  background:rgba(255,255,255,0.5);
+  border:1.5px solid var(--injera-dark);
+  border-radius:40px;padding:8px 14px;
+  display:none;align-items:center;justify-content:space-between;
+  gap:8px;margin-bottom:12px;
+  backdrop-filter:blur(4px);
+}
+.stage-bar.visible{display:flex}
+.stage-label{font-size:0.8rem;font-weight:600;color:var(--berbere);white-space:nowrap}
+.stage-dots{display:flex;gap:6px;align-items:center}
+.sdot{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--injera-dark);transition:all 0.4s;
+}
+.sdot.done{background:var(--tej);box-shadow:0 0 6px rgba(200,150,12,0.5)}
+.sdot.active{background:var(--berbere-mid);box-shadow:0 0 8px rgba(139,26,26,0.6);transform:scale(1.2)}
+.score-badge{
+  background:var(--berbere);color:var(--tej-pale);
+  font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;
+}
+
+/* ══ FILTER CHIPS ══ */
+.filter-row{
+  width:100%;display:none;gap:6px;
+  overflow-x:auto;padding-bottom:4px;margin-bottom:8px;
+  scrollbar-width:none;
+}
+.filter-row.visible{display:flex}
+.filter-row::-webkit-scrollbar{display:none}
+.chip{
+  flex-shrink:0;font-family:var(--font-sans);font-size:0.72rem;font-weight:600;
+  padding:5px 13px;border-radius:20px;
+  border:1.5px solid var(--injera-dark);
+  background:rgba(255,255,255,0.55);color:var(--smoke);
+  cursor:pointer;transition:all 0.18s;white-space:nowrap;
+}
+.chip.on{background:var(--berbere);color:white;border-color:var(--berbere)}
+.chip:active{transform:scale(0.95)}
+
+/* ══ PROGRESS ══ */
+.progress-row{
+  width:100%;display:none;align-items:center;gap:10px;margin-bottom:4px;
+}
+.progress-row.visible{display:flex}
+.prog-track{
+  flex:1;height:6px;background:var(--injera-dark);
+  border-radius:3px;overflow:hidden;
+}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--tej),var(--berbere-mid));
+  border-radius:3px;transition:width 0.5s cubic-bezier(.34,1.2,.64,1);
+}
+.prog-txt{font-size:0.74rem;color:var(--smoke-light);white-space:nowrap;font-weight:500}
+
+/* ══ CARD AREA ══ */
+.card-area{
+  width:100%;perspective:1200px;margin-bottom:14px;
+  min-height:300px;display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+/* Stacked ghost cards */
+.card-area::before,.card-area::after{
+  content:'';position:absolute;inset:0;
+  border-radius:var(--r-card);
+  background:var(--injera-warm);border:1.5px solid var(--injera-dark);
+}
+.card-area::before{transform:rotate(-3deg) translateY(5px);opacity:0.65;z-index:0}
+.card-area::after {transform:rotate(2deg)  translateY(3px);opacity:0.45;z-index:0}
+
+/* ── THE CARD ── */
+.card{
+  position:relative;z-index:2;
+  width:100%;min-height:280px;
+  border-radius:var(--r-card);
+  background:var(--cream);
+  border:2px solid var(--injera-dark);
+  box-shadow:var(--shadow);
+  padding:26px 22px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;gap:12px;
+  transform-origin:center bottom;
+}
+/* Lalibela cross watermark */
+.card::before{
+  content:'';position:absolute;bottom:14px;right:14px;
+  width:44px;height:44px;opacity:0.055;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='40' y='5' width='20' height='90' fill='%238B1A1A'/%3E%3Crect x='5' y='40' width='90' height='20' fill='%238B1A1A'/%3E%3Crect x='30' y='15' width='40' height='70' fill='%238B1A1A'/%3E%3Crect x='15' y='30' width='70' height='40' fill='%238B1A1A'/%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+}
+/* Flag stripe top */
+.card-stripe{
+  position:absolute;top:0;left:0;right:0;height:4px;
+  border-radius:var(--r-card) var(--r-card) 0 0;
+  background:var(--tej);transition:background 0.3s;
+}
+.card[data-type="TRUTH"]     .card-stripe{background:linear-gradient(90deg,#6a1a9a,#a040d0)}
+.card[data-type="CHALLENGE"] .card-stripe{background:linear-gradient(90deg,var(--berbere),var(--berbere-light))}
+.card[data-rarity="rare"]    .card-stripe{background:linear-gradient(90deg,#9B59B6,#D35400)}
+.card[data-rarity="epic"]    .card-stripe{background:linear-gradient(90deg,#E74C3C,#F39C12,#E74C3C);background-size:200%;animation:stripeShimmer 2s linear infinite}
+@keyframes stripeShimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+
+.type-badge{
+  font-size:0.7rem;font-weight:700;letter-spacing:0.8px;
+  padding:4px 12px;border-radius:20px;
+  background:var(--type-q);color:white;
+  display:inline-flex;align-items:center;gap:5px;
+  text-transform:uppercase;
+}
+.card[data-type="TRUTH"]     .type-badge{background:var(--type-t)}
+.card[data-type="CHALLENGE"] .type-badge{background:var(--type-c)}
+.card[data-type="proverb"]   .type-badge{background:#4A235A}
+.card[data-type="riddle"]    .type-badge{background:#1A4A2E}
+.card[data-type="humor"]     .type-badge{background:#7A3B0A}
+.card[data-type="coffee"]    .type-badge{background:#3D1C02}
+
+.card-emoji{
+  font-size:2.6rem;line-height:1;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.15));
+}
+.card-text{
+  font-family:var(--font-serif);
+  font-size:1.2rem;font-weight:700;line-height:1.65;
+  color:var(--ink);
+}
+.card-sub{font-size:0.82rem;color:var(--smoke-light);line-height:1.5}
+.rarity-label{
+  font-size:0.66rem;color:var(--tej);font-weight:600;letter-spacing:0.4px;
+}
+.card[data-rarity="rare"] .rarity-label{color:var(--rare)}
+.card[data-rarity="epic"] .rarity-label{color:var(--epic)}
+
+/* welcome */
+.card.welcome .card-text{font-size:1.55rem;color:var(--berbere)}
+
+/* ── Animations ── */
+@keyframes cardIn{
+  0%  {opacity:0;transform:scale(0.88) translateY(22px) rotate(-1.5deg)}
+  65% {transform:scale(1.02) translateY(-4px) rotate(0.3deg)}
+  100%{opacity:1;transform:scale(1) translateY(0) rotate(0)}
+}
+@keyframes cardOut{
+  0%  {opacity:1;transform:scale(1) translateY(0)}
+  100%{opacity:0;transform:scale(0.92) translateY(-18px) rotate(1.5deg)}
+}
+.card-in {animation:cardIn  0.44s cubic-bezier(.34,1.56,.64,1) forwards}
+.card-out{animation:cardOut 0.2s ease-in forwards}
+
+/* ══ STREAK ══ */
+.streak-row{
+  width:100%;display:flex;justify-content:center;
+  gap:6px;min-height:24px;flex-wrap:wrap;margin-top:2px;
+}
+.streak-badge{
+  font-size:0.75rem;
+  background:rgba(200,150,12,0.16);
+  color:var(--tej);border:1px solid rgba(200,150,12,0.3);
+  padding:3px 10px;border-radius:20px;font-weight:600;
+  animation:streakPop 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes streakPop{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+
+/* ══ BUTTONS ══ */
+.btn-row{width:100%;display:flex;gap:10px;margin-top:10px}
+.btn{
+  flex:1;font-family:var(--font-sans);font-size:1rem;font-weight:700;
+  border:none;border-radius:var(--r);padding:15px 12px;
+  cursor:pointer;transition:transform 0.12s,box-shadow 0.12s,filter 0.12s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  -webkit-user-select:none;user-select:none;position:relative;overflow:hidden;
+}
+.btn::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,0.28) 0%,transparent 70%);
+  opacity:0;transition:opacity 0.2s;
+}
+.btn:active{transform:scale(0.95)}
+.btn:active::after{opacity:1}
+.btn-primary{
+  background:linear-gradient(135deg,var(--berbere),var(--berbere-mid));
+  color:var(--tej-pale);flex:2;
+  box-shadow:0 4px 20px rgba(139,26,26,0.4),inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.btn-primary:hover{box-shadow:0 6px 28px rgba(139,26,26,0.55);filter:brightness(1.06)}
+.btn-secondary{
+  background:rgba(255,255,255,0.65);color:var(--berbere);
+  border:1.5px solid var(--injera-dark);
+  box-shadow:0 2px 10px rgba(90,50,10,0.1);backdrop-filter:blur(4px);
+}
+.btn-secondary:hover{background:rgba(255,255,255,0.9)}
+.btn-start{
+  background:linear-gradient(135deg,var(--tej),var(--berbere));
+  color:white;box-shadow:0 6px 30px rgba(200,150,12,0.45);
+  font-family:var(--font-serif);font-size:1.15rem;padding:18px;
+  border-radius:16px;width:100%;flex:unset;
+}
+.btn:disabled{opacity:0.4;pointer-events:none}
+
+/* ══ WIN SCREEN ══ */
+.win-screen{width:100%;text-align:center;padding:14px 0}
+.win-crown{
+  font-size:4rem;display:block;margin-bottom:8px;
+  animation:crownBounce 0.8s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes crownBounce{0%{transform:scale(0) rotate(-20deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+.win-title{font-family:var(--font-serif);font-size:1.8rem;font-weight:900;color:var(--berbere);line-height:1.2;margin-bottom:6px}
+.win-sub{font-size:0.95rem;color:var(--earth-light);margin-bottom:14px}
+.win-stats{display:flex;gap:12px;justify-content:center;margin-bottom:18px;flex-wrap:wrap}
+.win-stat{
+  background:rgba(255,255,255,0.65);border:1.5px solid var(--injera-dark);
+  border-radius:12px;padding:10px 18px;text-align:center;
+}
+.win-num{font-size:1.6rem;font-weight:900;color:var(--berbere);display:block}
+.win-lbl{font-size:0.7rem;color:var(--smoke-light)}
+
+/* ══ TOAST ══ */
+#toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--tej-pale);
+  font-family:var(--font-sans);font-size:0.87rem;
+  padding:10px 20px;border-radius:30px;opacity:0;
+  pointer-events:none;transition:opacity 0.25s,transform 0.25s;
+  z-index:900;white-space:nowrap;max-width:calc(100vw - 32px);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ══ MULTIPLAYER PANEL ══ */
+#mp-panel{
+  position:fixed;bottom:0;left:0;right:0;
+  max-width:var(--max-w);margin:0 auto;z-index:600;
+  font-family:var(--font-sans);
+}
+#mp-toggle{
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(90deg,var(--ink),#2a1608);
+  border-top:2px solid var(--tej);
+  padding:9px 16px;cursor:pointer;user-select:none;
+}
+#mp-toggle::before,#mp-toggle::after{content:'✛';font-size:0.85rem;color:var(--tej);opacity:0.35}
+.mp-bar-l{display:flex;align-items:center;gap:8px}
+.mp-bar-icon{font-size:1.1rem}
+.mp-bar-title{font-family:var(--font-serif);font-size:0.82rem;font-weight:700;color:var(--injera-warm)}
+#mp-bdg{
+  background:var(--tej-light);color:var(--ink);
+  border-radius:99px;padding:1px 9px;
+  font-size:0.65rem;font-weight:800;
+}
+#mp-chev{color:var(--smoke-light);font-size:0.6rem;transition:transform 0.25s}
+#mp-panel.open #mp-chev{transform:rotate(180deg)}
+#mp-drawer{
+  background:var(--ink);border-top:1px solid #3d2010;
+  max-height:0;overflow:hidden;
+  transition:max-height 0.35s cubic-bezier(.4,0,.2,1);
+}
+#mp-panel.open #mp-drawer{max-height:360px}
+.mp-in{padding:12px 14px 16px}
+.mp-setup-title{
+  font-family:var(--font-serif);font-size:0.9rem;
+  color:var(--tej-light);text-align:center;margin-bottom:10px;
+}
+.mp-row{display:flex;gap:7px;margin-bottom:8px}
+.mp-input{
+  flex:1;background:#2a1608;border:1.5px solid #5a3018;
+  color:var(--injera-warm);border-radius:var(--r-sm);
+  padding:8px 11px;font-size:0.82rem;font-family:var(--font-sans);outline:none;
+  transition:border-color 0.15s;
+}
+.mp-input:focus{border-color:var(--tej)}
+.mp-input::placeholder{color:#5a3a20}
+.mpb{
+  background:var(--flag-grn);color:var(--injera-warm);
+  border:none;border-radius:var(--r-sm);padding:8px 13px;cursor:pointer;
+  font-size:0.76rem;font-weight:700;font-family:var(--font-sans);
+  white-space:nowrap;transition:all 0.12s;
+}
+.mpb:active{transform:scale(0.95)}
+.mpb.tej{background:var(--tej);color:var(--ink)}
+.mpb.red{background:var(--berbere)}
+.mpb.sm{padding:5px 9px;font-size:0.7rem}
+#mp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;min-height:24px}
+.pchip{
+  background:#2a1608;border:1px solid #5a3018;
+  color:var(--injera-warm);border-radius:99px;
+  padding:3px 10px 3px 8px;font-size:0.73rem;
+  display:flex;align-items:center;gap:4px;
+}
+.pchip-x{cursor:pointer;color:#e04030;font-weight:900;font-size:0.85rem;line-height:1}
+.mp-start-row{display:flex;justify-content:flex-end}
+#mp-game{display:none}
+#mp-panel.playing #mp-game{display:block}
+#mp-panel.playing .mp-setup{display:none}
+#mp-sb{
+  display:flex;gap:7px;overflow-x:auto;
+  padding-bottom:5px;margin-bottom:9px;scrollbar-width:none;
+}
+#mp-sb::-webkit-scrollbar{display:none}
+.sc{
+  min-width:62px;flex-shrink:0;background:#2a1608;
+  border:1.5px solid #5a3018;border-radius:var(--r-sm);
+  padding:7px 8px;text-align:center;transition:all 0.2s;
+}
+.sc.cur{
+  border-color:var(--tej-light);background:rgba(200,150,12,0.12);
+  box-shadow:0 0 14px rgba(200,150,12,0.2);
+}
+.sc-av{font-size:1.25rem;line-height:1}
+.sc-nm{font-size:0.6rem;color:#8a6040;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:54px}
+.sc-pt{font-size:1rem;font-weight:900;color:var(--tej-light)}
+.sc.cur .sc-nm{color:var(--injera-warm)}
+#mp-tbar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(0,0,0,0.4);border-radius:var(--r-sm);
+  padding:7px 12px;margin-bottom:8px;
+  border:1px solid #3d2010;border-left:2px solid var(--tej);
+}
+.mp-who{color:var(--tej-light);font-weight:700;font-family:var(--font-serif);font-size:0.85rem}
+.mp-rnd{color:#5a3a20;font-size:0.68rem}
+.mp-acts{display:flex;gap:7px;flex-wrap:wrap}
+#pt-toast{
+  position:fixed;top:72px;left:50%;
+  transform:translateX(-50%) scale(0.6);
+  background:linear-gradient(135deg,var(--tej),var(--tej-light));
+  color:var(--ink);font-family:var(--font-serif);font-weight:700;
+  padding:8px 22px;border-radius:99px;font-size:0.9rem;
+  opacity:0;pointer-events:none;z-index:900;
+  transition:all 0.3s cubic-bezier(.34,1.5,.64,1);white-space:nowrap;
+  box-shadow:0 4px 20px rgba(200,150,12,0.35);
+}
+#pt-toast.show{opacity:1;transform:translateX(-50%) scale(1)}
+#win-ov{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(10,4,0,0.88);backdrop-filter:blur(10px);
+  align-items:center;justify-content:center;
+}
+#win-ov.show{display:flex}
+.wbox{
+  background:linear-gradient(155deg,var(--injera-warm),var(--injera));
+  border:2px solid var(--tej-light);border-radius:24px;
+  padding:28px 30px;text-align:center;
+  max-width:300px;width:92%;
+  box-shadow:0 0 70px rgba(200,150,12,0.2);
+  animation:wPop 0.45s cubic-bezier(.34,1.45,.64,1);
+  position:relative;overflow:hidden;
+}
+.wbox::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--flag-grn) 33%,var(--flag-yel) 33% 66%,var(--flag-red) 66%);
+}
+@keyframes wPop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.wbox .win-crown{filter:drop-shadow(0 4px 12px rgba(200,150,12,0.4))}
+.wbox .win-title{font-family:var(--font-serif);color:var(--berbere)}
+.wbox .win-sub{color:var(--earth-light)}
+.wbox .win-stats{margin-bottom:14px}
+.wbox .win-stat{background:rgba(255,255,255,0.7)}
+.wbox .win-scores{
+  font-size:0.78rem;color:var(--earth-light);line-height:2;
+  border-top:1px solid var(--injera-dark);padding-top:10px;margin-bottom:14px;
+}
+.wbox .win-scores b{color:var(--ink)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-height:700px){
+  .card{min-height:240px;padding:20px}
+  .card-text{font-size:1.05rem}
+  header{padding:14px 0 8px}
+  .game-title{font-size:1.65rem}
+}
+@media(min-width:480px){
+  body{background:#E8D8B0}
+  #app{background:var(--injera);box-shadow:0 0 80px rgba(90,50,10,0.14)}
+}
+/* ══ ACCESSIBILITY ══ */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="app" role="main">
+  <!-- HEADER -->
+  <header>
+    <div class="flag-bar"><span></span><span></span><span></span></div>
+    <span class="header-icon" aria-hidden="true">☕</span>
+    <h1 class="game-title">ኑ እንጫወት</h1>
+    <p class="game-subtitle">ቡና ቤት ጫወታ · ጎረቤት ጫወታ · Ethiopian Party Game</p>
+  </header>
+
+  <div class="tibeb" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <!-- STAGE BAR -->
+  <div class="stage-bar" id="stage-bar" aria-live="polite">
+    <span id="jebena" aria-hidden="true">🏺</span>
+    <span class="stage-label" id="stage-label">ቡና ተቀጥሏል</span>
+    <div class="stage-dots" id="stage-dots" aria-label="Progress"></div>
+    <span class="score-badge" id="score-badge">0 ነጥብ</span>
+  </div>
+
+  <!-- FILTER CHIPS -->
+  <div class="filter-row" id="filter-row" role="group" aria-label="ካርድ ዓይነት"></div>
+
+  <!-- PROGRESS -->
+  <div class="progress-row" id="progress-row">
+    <div class="prog-track" role="progressbar" aria-label="ሂደት">
+      <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+    <span class="prog-txt" id="prog-txt">0 / 0</span>
+  </div>
+
+  <!-- CARDS -->
+  <div class="card-area" id="card-area" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- STREAKS -->
+  <div class="streak-row" id="streak-row"></div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row" id="btn-row"></div>
+</div>
+
+<div id="toast" role="alert" aria-live="assertive"></div>
+
+<!-- MULTIPLAYER PANEL -->
+<div id="mp-panel">
+  <div id="mp-toggle">
+    <div class="mp-bar-l">
+      <span class="mp-bar-icon">🫖</span>
+      <span class="mp-bar-title">ተጫዋቾች</span>
+      <span id="mp-bdg">OFF</span>
+    </div>
+    <span id="mp-chev">▲</span>
+  </div>
+  <div id="mp-drawer">
+    <div class="mp-in">
+      <div class="mp-setup">
+        <div class="mp-setup-title">☕ ወደ ጨዋታ ይጋበዙ</div>
+        <div class="mp-row">
+          <input class="mp-input" id="mp-inp" type="text" placeholder="የተጫዋቹ ስም…" maxlength="14" autocomplete="off">
+          <button class="mpb" id="mp-add">ጨምር +</button>
+        </div>
+        <div id="mp-chips"></div>
+        <div class="mp-start-row">
+          <button class="mpb tej" id="mp-start">ጨዋታ ጀምር ▶</button>
+        </div>
+      </div>
+      <div id="mp-game">
+        <div id="mp-sb"></div>
+        <div id="mp-tbar">
+          <span class="mp-who" id="mp-who">—</span>
+          <span class="mp-rnd" id="mp-rnd"></span>
+        </div>
+        <div class="mp-acts">
+          <button class="mpb tej" id="mp-gpt">✓ ነጥብ ስጥ</button>
+          <button class="mpb"     id="mp-nxt">ቀጣይ ተራ →</button>
+          <button class="mpb red sm" id="mp-end">■ አቁም</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="pt-toast"></div>
+<div id="win-ov">
+  <div class="wbox">
+    <span class="win-crown">🏆</span>
+    <div class="win-title" id="w-h">አሸናፊ</div>
+    <div class="win-sub" id="w-ge">— እንኳን ደስ አለህ —</div>
+    <div class="win-name" style="font-size:1.55rem;margin:6px 0 12px;font-family:var(--font-serif)" id="w-name"></div>
+    <div class="win-scores" id="w-scores"></div>
+    <button class="mpb tej" id="mp-again" style="width:100%;padding:12px;font-size:0.88rem;font-family:var(--font-serif)">🔄 ደግሞ ተጫወቱ</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ═══════════════════════════════════════════════════════
+   CARDS  — 105 cards merged from both sources
+   Types: QUESTION | TRUTH | CHALLENGE | proverb | riddle | humor | coffee
+═══════════════════════════════════════════════════════ */
+const CARDS = [
+  // ── QUESTIONS (group/habesha/family/love/fun) ──
+  {id:"q01",type:"QUESTION",emoji:"💸",text:"ከዚህ ግሩፕ ውስጥ 5,000 ብር አበድረኝ ብትለው «ሰኞ እመልሳለሁ» ብለህ በፍጹም የማይያምንህና ፊቱን የሚያዞረው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q02",type:"QUESTION",emoji:"🚐",text:"በባጃጅ ወይም በሚኒባስ ታክሲ ውስጥ ካጋጠሙህ ነገሮች ሁሉ በጣም ያስቀቀህ ወይም ያሳፈረህ ነገር ምንድነው?",cat:"ሀበሻ",rarity:"common"},
+  {id:"q03",type:"QUESTION",emoji:"📱",text:"እናትህ የቴሌግራም ፎልደርህን ወይም የተደበቀ ቻትህን ድንገት ዛሬ ብታየው መጀመሪያ የምትሰጥህ ቅጣት ምንድነው?",cat:"ቤተሰብ",rarity:"common"},
+  {id:"q04",type:"QUESTION",emoji:"🚗",text:"ከከተማ ውጪ በረጅም ጉዞ ላይ እያላችሁ መኪና ቢበላሽባችሁ፣ እዚህ ካሉት ሰዎች መጀመሪያ ጮሆ የሚያለቅሰው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q05",type:"QUESTION",emoji:"💔",text:"ፍቅረኛህን አስተዋውቀህ ቤተሰቦችህ «አይመጥንም» ብለው ፊት ቢነሱህ ትተዋለህ ወይስ ትቀጥላለህ?",cat:"ፍቅር",rarity:"rare"},
+  {id:"q06",type:"QUESTION",emoji:"🍽️",text:"በበዓል ቀን አክስቶችህ እንዳይቀየሙህ ብቻ ስትበላው ግን ጨርሶ የማትወደው የሀበሻ ምግብ ምንድነው?",cat:"ሀበሻ",rarity:"common"},
+  {id:"q07",type:"QUESTION",emoji:"😅",text:"ከዚህ ግሩፕ ውስጥ የቲክቶክ ወይም የኢንስታ አካውንቱን በሚስጥር ብታጠፋው ሰላም የምታገኝበት ሰው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q08",type:"QUESTION",emoji:"🏛️",text:"ፓስፖርት ለማውጣት ወይም መታወቂያ ለመቀየር ሄደህ የገጠመህ ትልቁና ያናደደህ ራስ ምታት ምን ነበር?",cat:"ሀበሻ",rarity:"common"},
+  {id:"q09",type:"QUESTION",emoji:"😂",text:"ከኛ መሀል እራሱን «አራዳና አዳሪ» አድርጎ የሚያስብ ግን ሰፈር ውስጥ በቀላሉ በልጆች የሚሸወደው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q10",type:"QUESTION",emoji:"🌙",text:"ማታ ከአስር ሰዓት በኋላ ወደ ቤት ገብተህ ከአባትህ ቁጣ ለማምለጥ የተጠቀምክበት ትልቁ ውሸት ምንድነው?",cat:"ቤተሰብ",rarity:"common"},
+  {id:"q11",type:"QUESTION",emoji:"☕",text:"ከዚህ ግሩፕ ውስጥ ለሻይና ቆሎ ቀጠሮ ልክ እንደ ሰርግ ተኳኩሎ የሚመጣው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q12",type:"QUESTION",emoji:"🚫",text:"በፌስቡክ ወይም በቴሌግራም ሰውን Block ለማድረግ የተጠቀምክበት ጥቃቅንና አስቂኝ ምክንያት ምንድነው?",cat:"መዝናናት",rarity:"common"},
+  {id:"q13",type:"QUESTION",emoji:"🫓",text:"እድሜ ልክህን ደረቅ እንጀራ ብቻ በውሃ መብላት ወይስ ቡና ጨርሶ አለመጠጣት? የትኛውን ትመርጣለህ?",cat:"ሀበሻ",rarity:"rare"},
+  {id:"q14",type:"QUESTION",emoji:"🤦",text:"ከዚህ ግሩፕ ውስጥ የቴሌግራም ቪአይፒ ቻናል ወይም ፎርጅድ ቢዝነስ ላይ ቶሎ የሚሸወደው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q15",type:"QUESTION",emoji:"🗣️",text:"ስለ አንተ ሰፈር ውስጥ የተወራና ፈጽሞ ውሸት የሆነ ግን ስምህን ከፍ ያደረገልህ ወሬ ምንድነው?",cat:"መዝናናት",rarity:"common"},
+  {id:"q16",type:"QUESTION",emoji:"⭐",text:"ከሃገር ውስጥ ታዋቂ ሰዎች ፌክነቱ ያናድድህና ቦታውን ለአንድ ቀን መውሰድ የምትፈልጉ ማን ነው?",cat:"መዝናናት",rarity:"common"},
+  {id:"q17",type:"QUESTION",emoji:"🫣",text:"ጓደኞችህ ጋር እየተራመድክ ፎርም ለመያዝ ስትሞክር ተደናቅፈህ ፊትህ ተደፍቶ ታውቃለህ?",cat:"መዝናናት",rarity:"common"},
+  {id:"q18",type:"QUESTION",emoji:"📵",text:"«ካርዴ አለቀብኝ» ወይም «ኔትወርክ የለም» ብለህ ቀጠሮ የቀየርከው ስንት ጊዜ ነው?",cat:"ሀበሻ",rarity:"common"},
+  {id:"q19",type:"QUESTION",emoji:"😬",text:"ሰፈር ካሉ ጥበቃዎች ወይም አዋኪዎች ጋር የገጠመህ ትልቁ አሳፋሪ ግጭት አለ?",cat:"ሀበሻ",rarity:"common"},
+  {id:"q20",type:"QUESTION",emoji:"🙉",text:"አሁን ወጣቶች የሚጠቀሙት ስትሰማው ጆሮህን የሚበሳህ የሰፈር ቋንቋ (ስላንግ) ምንድነው?",cat:"መዝናናት",rarity:"common"},
+  {id:"q21",type:"QUESTION",emoji:"🏪",text:"በኪስህ ባለው ብር መርካቶ ወይም ፒያሳ ሱቅ ብትከፍት ምን መሸጥ ትችላለህ?",cat:"ሀበሻ",rarity:"common"},
+  {id:"q22",type:"QUESTION",emoji:"🎵",text:"ከኛ መሀል ስልኩ ቢበረበር የድሮ የሰርግ እና የስሜት ዘፈኖች ስብስብ የሚገኝበት ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q23",type:"QUESTION",emoji:"😈",text:"ትልቅ የቤተሰብ ማህበር ላይ እቃ እንዳታጥብ ዋሽተህ የሄድከው — ትልቁ ውሸት ምን ነበር?",cat:"ቤተሰብ",rarity:"common"},
+  {id:"q24",type:"QUESTION",emoji:"😵",text:"ኢንተርኔት ለአንድ ሳምንት ቢጠፋ እብድ ሆኖ መንገድ ላይ የሚጮኸው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q25",type:"QUESTION",emoji:"💑",text:"ከዚህ ግሩፕ ለፍቅረኛው ሲል ጓደኞቹን ቶሎ የሚረሳው «ስልክ አላነሳም» የሚለው ማነው?",cat:"ፍቅር",rarity:"common"},
+  {id:"q26",type:"QUESTION",emoji:"🚕",text:"ታክሲ ውስጥ ረዳቱ «መልስ የለኝም ዝለል» ብሎህ ተጣልተህ ፖሊስ ጋር የደረስከው መቼ ነው?",cat:"ሀበሻ",rarity:"common"},
+  {id:"q27",type:"QUESTION",emoji:"💇",text:"አሁን ወጣቶች ዘንድ ያለውን የትኛውን ፋሽን ወይም ፀጉር ስታይል ብታጠፋው ደስ ይልሃል?",cat:"መዝናናት",rarity:"common"},
+  {id:"q28",type:"QUESTION",emoji:"🛒",text:"ዋጋ ለመደራደር አብረኸው ቢሄዱ ዋጋ ከሚያስወድድ ሰነፍ ሰው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q29",type:"QUESTION",emoji:"😶",text:"ቋንቋ ሳይገባህ ዝም ብለህ ለመክበር ስትል አንገትህን ነቅነቅ ያደረግከው ስንት ጊዜ ነው?",cat:"መዝናናት",rarity:"common"},
+  {id:"q30",type:"QUESTION",emoji:"🚔",text:"ፖሊስ ጣቢያ በስህተት ብትታሰር ዋስ ሆኖ 100% የምትተማመንበት ሰው ማነው?",cat:"ቡድን",rarity:"rare"},
+  {id:"q31",type:"QUESTION",emoji:"👶",text:"ወላጆችህ ጓደኞቻቸው ባሉበት የሚጠሩህ አሳፋሪው የልጅነት ወይም የቤት ስምህ ምንድነው?",cat:"ቤተሰብ",rarity:"common"},
+  {id:"q32",type:"QUESTION",emoji:"🫦",text:"በፍቅር ህይወትህ ውስጥ ጓደኞቻቸው ቢሰሙ እስከ ፍጻሜህ ድረስ የሚቀልዱብህ ሚስጥር ምንድነው?",cat:"ፍቅር",rarity:"rare"},
+  {id:"q33",type:"QUESTION",emoji:"🍅",text:"ሱቅ ላይ ቲማቲም ወይም አቮካዶ ዋጋ ምክንያት ከባለሱቁ ጋር የሚጨቃጨቅ ንፉግ ሰው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q34",type:"QUESTION",emoji:"🙈",text:"ሰፈር ሳያዩህ ደብቀህ የገዛኸውና ክፍልህ ያስቀመጥከው ዕቃ ምንድነው?",cat:"መዝናናት",rarity:"common"},
+  {id:"q35",type:"QUESTION",emoji:"🔕",text:"ከዚህ ግሩፕ ውስጥ ስታተሱን (Status) በሚስጥር Mute ያደረግከው ሰው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q36",type:"QUESTION",emoji:"👴",text:"ከትልልቅ ዘመዶቻቸው ስለ ፍቅር ወይም ትዳር የተሰጠህ ፍጹም የማይሰራ ምክር ምን ነበር?",cat:"ቤተሰብ",rarity:"common"},
+  {id:"q37",type:"QUESTION",emoji:"🚘",text:"ሐዋሳ፣ ቢሾፍቱ ወይም ሪዞርት ብትሄዱ መኪናውን እንዲነዳ ጨርሶ የማታምነው ሰው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q38",type:"QUESTION",emoji:"🎬",text:"ሰው ሁሉ ያደነቀው ግን ስታየው ጨርሶ ያልተመቸህ የሃገር ውስጥ ፊልም ምንድነው?",cat:"መዝናናት",rarity:"common"},
+  {id:"q39",type:"QUESTION",emoji:"😇",text:"ቤተሰብ ፊት መላዕክት ነው ጓደኞቹ ጋር ሲሆን ቀበጥ — ያ ሰው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"q40",type:"QUESTION",emoji:"💰",text:"አሁን ባንክ ያለው ሂሳቡ ግንባርህ ላይ ቢጻፍ ከቤት ወጥተህ መንገድ ትሄዳለህ?",cat:"መዝናናት",rarity:"epic"},
+  // ── TRUTHS ──
+  {id:"t01",type:"TRUTH",emoji:"🍗",text:"ለምርቃት የተቀመጠን የዶሮ ወጥ ስጋ በሚስጥር ሰርቀህ ከቅመም ጋር በልተህ ታውቃለህ?",cat:"ቤተሰብ",rarity:"common"},
+  {id:"t02",type:"TRUTH",emoji:"👔",text:"ፋሽን አውቃለሁ ብሎ ሲለብስ ግን ጨርሶ ኮምባይንድ የማይሆንለት ሰው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"t03",type:"TRUTH",emoji:"👻",text:"«ቤተሰቦቻችን ይተዋወቃሉ» ስትፈራ ብቻ ጀምረህ የነበረን ፍቅር Ghost አድርገህ ታውቃለህ?",cat:"ፍቅር",rarity:"rare"},
+  {id:"t04",type:"TRUTH",emoji:"😤",text:"ሳይጠሩህ ሄደው ቂም የያዝክባቸው ሰዎች ከዚህ ካሉ ጓደኞቻቸው ዘንድ አሉ?",cat:"ቡድን",rarity:"common"},
+  {id:"t05",type:"TRUTH",emoji:"😍",text:"Crush ለማማረክ ስትል ስለ ሰፈርህ ወይም ስለ መኪናህ ዋሽተህ ታውቃለህ?",cat:"ፍቅር",rarity:"common"},
+  {id:"t06",type:"TRUTH",emoji:"💸",text:"በአንድ ምሽት ፕሮግራም ላይ ያወጣኸው ከፍተኛው ብር ስንት ነበር? አሁን ይቆጭሃል?",cat:"መዝናናት",rarity:"common"},
+  {id:"t07",type:"TRUTH",emoji:"😱",text:"ተሳስተህ የቤተሰብ ቫይበር ግሩፕ ላይ ያላሳደርከውን ፎቶ ወይም ፅሁፍ ልከህ ታውቃለህ?",cat:"ቤተሰብ",rarity:"epic"},
+  {id:"t08",type:"TRUTH",emoji:"🗣️",text:"አዳዲስ ስላንጎችን ለመጠቀም ሲሞክር አጠቃቀሙ ሁሌ ሰፈር ውስጥ የሚሳሳተው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"t09",type:"TRUTH",emoji:"🎂",text:"ከሱቅ ገዝተህ «እኔው ነኝ የለፋሁበት» ብለህ ለሰው አቅርበህ ታውቃለህ?",cat:"መዝናናት",rarity:"common"},
+  {id:"t10",type:"TRUTH",emoji:"🏃",text:"ትልልቅ ዘመዶቹ ረጅም ምርቃት ላለ መስማት ስትል ሰበብ ፈልገህ የጠፋኸው እንዴት ነበር?",cat:"ቤተሰብ",rarity:"common"},
+  {id:"t11",type:"TRUTH",emoji:"😅",text:"የጓደኛህ ልብስ ባያምርብህም «ዋው ማሻአላህ» ብለህ አሞግሰሃል?",cat:"ቡድን",rarity:"common"},
+  {id:"t12",type:"TRUTH",emoji:"🏠",text:"ብቻህን ስትሆን ሰፈር ቢሰማ ቺካ የሚሆንብህ ነገር ምንድነው?",cat:"መዝናናት",rarity:"rare"},
+  {id:"t13",type:"TRUTH",emoji:"🔍",text:"የጓደኛህ ስልክ ክፍት ሲቀመጥ በሚስጥር ጋለሪውን ወይም ቻቱን ፈትሸህ ታውቃለህ?",cat:"ቡድን",rarity:"common"},
+  {id:"t14",type:"TRUTH",emoji:"✈️",text:"ከዚህ ግሩፕ ቪዛ ቢመጣለት ለማንም ሳይናገር ቀጣዩ ቀን ኤርፖርት የሚሄደው ማነው?",cat:"ቡድን",rarity:"rare"},
+  {id:"t15",type:"TRUTH",emoji:"😭",text:"ለገና ወይም ለጥምቀት ልብስ ስላልተመቸህ ብቻ እያለቀስክ «ፊቴን አልታጠብም» ያልከው ስንት አመትህ ድረስ ነው?",cat:"ቤተሰብ",rarity:"common"},
+  {id:"t16",type:"TRUTH",emoji:"🤫",text:"ቤተሰቦቻቸው ቢሰሙ ዱላ የሚያስመዝዝህ ትልቁ ሚስጥርህ ምንድነው?",cat:"ቤተሰብ",rarity:"epic"},
+  {id:"t17",type:"TRUTH",emoji:"😒",text:"ሰው ሁሌ ውድ ቦታ ፎቶ ሲለጥፍ ስቀናህ ብቻ Mute ያደረግከው ሰው አለ?",cat:"መዝናናት",rarity:"common"},
+  {id:"t18",type:"TRUTH",emoji:"😳",text:"ካፌ ውስጥ የምትደነቀውን ሰው ስታይ ሻፕ ለማድረግ ሲሞክር ያደረጋቸው አሳፋሪ ስህተት ምን ነበር?",cat:"ፍቅር",rarity:"common"},
+  {id:"t19",type:"TRUTH",emoji:"🎁",text:"ሰው በልደትህ የሰጠህን ርካሽ ስጦታ ፊቱን አዙረህ ለሌላ ሰጥተሃል?",cat:"መዝናናት",rarity:"common"},
+  {id:"t20",type:"TRUTH",emoji:"🕯️",text:"ወላጆቻቸው ያስተማሩህና አሁንም ድረስ ውስጥህ የምታምነው ወይም የምትጨነቅበት የድሮ አባባል ምንድነው?",cat:"ቤተሰብ",rarity:"rare"},
+  {id:"t21",type:"TRUTH",emoji:"🙃",text:"የማትወደውን የድሮ የትምህርት ቤት ጓደኛህን ላለማግኘት ብቻ ሱቅ ውስጥ የገባህ ጊዜ አለ?",cat:"መዝናናት",rarity:"common"},
+  {id:"t22",type:"TRUTH",emoji:"🎭",text:"ስለ ፍቅር ነገር ትንሿን ጭቅጭቅ (Drama) ትልቅ አድርጎ የሚፈጥረው ሰው ማነው?",cat:"ቡድን",rarity:"common"},
+  {id:"t23",type:"TRUTH",emoji:"😬",text:"ስራ ወይም ትምህርት ለቀር «የቅርብ ዘመዴ አርፎብኝ ነው» ብለህ ዋሽተህ ታውቃለህ?",cat:"መዝናናት",rarity:"common"},
+  {id:"t24",type:"TRUTH",emoji:"🔥",text:"ሰፈር ስለ አንተ የተወራ ፈጽሞ ውሸት ግን ስምህን ከፍ ያደረገ ወሬ አለ?",cat:"ሀበሻ",rarity:"rare"},
+  {id:"t25",type:"TRUTH",emoji:"🤝",text:"ጓደኛ የሆንከው ሁልጊዜ ስለሚከፍል፣ መኪና ስላለው ወይም ዋይፋይ ስለሚሰጥ ብቻ ነው?",cat:"ቡድን",rarity:"rare"},
+  {id:"t26",type:"TRUTH",emoji:"📄",text:"ለስራ ቃለ-መጠይቅ (Interview) ሲቪህ ላይ የጻፍከው ትልቁ ውሸት ምንድነው?",cat:"መዝናናት",rarity:"common"},
+  {id:"t27",type:"TRUTH",emoji:"🤥",text:"ስለ ቤተሰቦቻቸው ገቢ ወይም ስራ ለሚያውቅህ ሰው አጋኖ ዋሽተህ ታውቃለህ?",cat:"ቤተሰብ",rarity:"common"},
+  {id:"t28",type:"TRUTH",emoji:"⚠️",text:"ከባድ ችግር ቢገጥምህ ጨርሶ ልታምነው የማይገባህ ሰው ከዚህ ካሉ ማነው?",cat:"ቡድን",rarity:"rare"},
+  {id:"t29",type:"TRUTH",emoji:"📸",text:"ፎቶ ለጥፈህ በ15 ደቂቃ ውስጥ Like ስላላገኘ ብቻ ያጠፋኸው ጊዜ ነው?",cat:"መዝናናት",rarity:"common"},
+  {id:"t30",type:"TRUTH",emoji:"🚩",text:"ወላጆቻቸው ለፍቅርህ ሁነኛ ነው ብለው የሚወዱት ባህሪ ለአንተ ጨርሶ Red Flag ምንድነው?",cat:"ፍቅር",rarity:"epic"},
+  // ── CHALLENGES ──
+  {id:"c01",type:"CHALLENGE",emoji:"📲",text:"ስልክህን በስተግራህ ለሰው ስጠው — ቴሌግራም ባዮህን ወደ ፈለጉት አስቂኝ ፅሁፍ ይቀይሩት። ለ24 ሰዓት አይቀየርም!",cat:"ፈተና",rarity:"epic"},
+  {id:"c02",type:"CHALLENGE",emoji:"💃",text:"ፊት ለፊቱ ያለውን ሰው እያየህ ለ15 ሰከንድ ሳትስቅ ከባድ እስክስታ አሳይ!",cat:"ፈተና",rarity:"common"},
+  {id:"c03",type:"CHALLENGE",emoji:"📡",text:"ተነስ፤ «ኢትዮ ቴሌኮም ለምን ምርጡ ወይም አስቸጋሪው ኔትወርክ ነው» ርዕስ ለ1 ደቂቃ ማስታወቂያ ስራ!",cat:"ፈተና",rarity:"common"},
+  {id:"c04",type:"CHALLENGE",emoji:"📷",text:"ስልክህ ውስጥ ያለውን ትልቁ አሳፋሪ የልጅነት ፎቶ ለሁሉም አሳይ!",cat:"ፈተና",rarity:"rare"},
+  {id:"c05",type:"CHALLENGE",emoji:"💳",text:"የባንክ አፕ ቀሪ ሂሳብ (Balance) ወይም ወጪህን ለግሩፑ በግልፅ አሳይ!",cat:"ፈተና",rarity:"epic"},
+  {id:"c06",type:"CHALLENGE",emoji:"😲",text:"አንዲት አያት ጆሮ ተለክቶ ወይም ንቅሳት ሲያዩ የሚደናገጡ — ያ ድንጋጤ ትወናቸዉ አሳይ!",cat:"ፈተና",rarity:"common"},
+  {id:"c07",type:"CHALLENGE",emoji:"🎤",text:"ለሚቀጥሉ ሦስት ዙሮች እያንዳንዱ ዓረፍተ ነገር «ስማ ወንድሜ...» ወይም «ስሚ እህቴ...» ብለህ ብቻ ጀምር!",cat:"ፈተና",rarity:"rare"},
+  {id:"c08",type:"CHALLENGE",emoji:"🎶",text:"የሙዚቃ አፕህን ክፈት — ያዳመጥከውን ትዝታ/ለቅሶ ዘፈን ለሁሉም በጮሆ ፍጠር!",cat:"ፈተና",rarity:"common"},
+  {id:"c09",type:"CHALLENGE",emoji:"👗",text:"ፊት ለፊቱ ያለ ሰው ልብስ ልክ እንደ ፋሽን ባለሙያ ለ30 ሰከንድ በኮሜዲ ተቻቸው!",cat:"ፈተና",rarity:"common"},
+  {id:"c10",type:"CHALLENGE",emoji:"🏷️",text:"በስተቀኝህ ያለ ሰው የፈለጉትን አስቂኝ ቅጽል ስም ያውጣልክ — ጨዋታው እስኪያልቅ ሁሉም በዛ ስም ይጠራሃል!",cat:"ፈተና",rarity:"rare"},
+  {id:"c11",type:"CHALLENGE",emoji:"🏋️",text:"አምስት Jumping Jacks ሲሰሩ በእያንዳንዱ ቁጥር ላይ የቡድን ወይም ሰፈር ስምህን በጮሆ ጥራ!",cat:"ፈተና",rarity:"common"},
+  {id:"c12",type:"CHALLENGE",emoji:"🌐",text:"ብሮውዘር ታሪክህ (History) ውስጥ የመጨረሻዎቹ ሦስት ፍለጋዎች ሳታጠፋ ለሁሉም አንብብ!",cat:"ፈተና",rarity:"epic"},
+  {id:"c13",type:"CHALLENGE",emoji:"🇪🇹",text:"ለሚቀጥሉ ሁለት ዙሮች Cool, Sorry, Phone, Cafe — ምንም እንግሊዝኛ ቃል አትጠቀም! ከተጠቀምክ ቅጣት!",cat:"ፈተና",rarity:"rare"},
+  {id:"c14",type:"CHALLENGE",emoji:"🚐",text:"«ኮተቤ! መገናኛ! ሙሉ አስፋልት!» — ልክ እንደ ታክሲ ረዳት ሲጮህ አስምስለው!",cat:"ፈተና",rarity:"common"},
+  {id:"c15",type:"CHALLENGE",emoji:"📨",text:"ግሩፑ የሚጽፍልህን አስቂኝ ፅሁፍ ቴሌግራምህ ላይ ለ5ኛ ሰው Send አድርጋቸው!",cat:"ፈተና",rarity:"rare"},
+  {id:"c16",type:"CHALLENGE",emoji:"😡",text:"ከዚህ ካሉ ሰዎች አንዱ ሲቆጣ የሚያሳየውን ፊትና ባህሪ አጋንነህ ትወናው!",cat:"ፈተና",rarity:"common"},
+  {id:"c17",type:"CHALLENGE",emoji:"🤴",text:"ለሚቀጥለው ዙር ሰው ለሚጠይቅህ ሁሉ ልክ እንደ ድሮ መኳንንት እጅ እየነሳህ (እየሰገድክ) መልስ ስጥ!",cat:"ፈተና",rarity:"rare"},
+  {id:"c18",type:"CHALLENGE",emoji:"⌚",text:"የለበስከውን ጃኬት ወይም ቀለበት/ሰዓት ጨዋታው እስኪያልቅ ከቀኝህ ሰው ጋር ተቀያዩ!",cat:"ፈተና",rarity:"common"},
+  {id:"c19",type:"CHALLENGE",emoji:"🥤",text:"ኩባያ ራስህ ላይ አስቀምጠህ ሳይወድቅ የባህል ዉዝዋዜ እያሳየህ ከክፍሉ ጫፍ እስከ ጫፍ ሄደህ ተመለስ!",cat:"ፈተና",rarity:"epic"},
+  {id:"c20",type:"CHALLENGE",emoji:"📜",text:"አጠገብህ ላለ ሰው ድሮ የፍቅር ዘፈን ግጥም ልክ እንደ ፈላስፋ ድምፅ እያየኸው አንብብለት!",cat:"ፈተና",rarity:"common"},
+  {id:"c21",type:"CHALLENGE",emoji:"✏️",text:"ፊቱ ያለ ሰው ስክሪብቶ እጅህ ላይ ትንሽ አስቂኝ ስዕል እንዲስልብህ ፍቀድ — እስኪታጠብ አይጠፋም!",cat:"ፈተና",rarity:"rare"},
+  {id:"c22",type:"CHALLENGE",emoji:"🍽️",text:"ልክ በቪአይፒ ሆቴል አስተናጋጅ ሆነህ ክፍሉ ውስጥ ላለ ሰው ሁሉ በከፍተኛ ክብር ምግብ ወይም መጠጥ አቅርብ!",cat:"ፈተና",rarity:"common"},
+  {id:"c23",type:"CHALLENGE",emoji:"📺",text:"የደረሰህ የመጨረሻ SMS ልክ እንደ ዜና አቅራቢ በከባድ ድምፅ ለሁሉም አንብብ!",cat:"ፈተና",rarity:"rare"},
+  {id:"c24",type:"CHALLENGE",emoji:"😁",text:"ስለ ቤተሰብ ሰርግ አስቂኝ ታሪክ ተናገር — ጥርሶቻቸዉ ሙሉ ተነካካ; ከንፈርህን ሳታንቀሳቅስ!",cat:"ፈተና",rarity:"common"},
+  {id:"c25",type:"CHALLENGE",emoji:"🦩",text:"ለሚቀጥለው ዙር ሙሉ ቁም — እግርህ መሬት ከነካ ለሁሉም መጠጥ ትቀዳለህ!",cat:"ፈተና",rarity:"rare"},
+  {id:"c26",type:"CHALLENGE",emoji:"😈",text:"ከግሩፑ አንዱን ሰው ምረጥ — ልክ እንደ ፊልም Villain በጥልቀት እያየኸው በሚስጥር ድምፅ አስፈራራው!",cat:"ፈተና",rarity:"rare"},
+  {id:"c27",type:"CHALLENGE",emoji:"🌧️",text:"ዝናብ ሲዘንብ ታክሲ ለማያዝ ሰዎቹ ሲሮጡ ሲጋፉ — ያ ትዕይንት ለ30 ሰከንድ Slow Motion ትወናው!",cat:"ፈተና",rarity:"common"},
+  {id:"c28",type:"CHALLENGE",emoji:"👏",text:"ለሚቀጥለው ዙር ጥያቄ ከመመለስህ በፊት ሁልጊዜ እጅህን ሁለት ጊዜ ማጨብጨብ አለብህ!",cat:"ፈተና",rarity:"common"},
+  {id:"c29",type:"CHALLENGE",emoji:"🛍️",text:"ስሊፐር ወይም ባዶ ፌስታል ልክ እንደ ትልቅ ነጋዴ ለ1 ደቂቃ ማስታወቂያ ሰራ!",cat:"ፈተና",rarity:"common"},
+  {id:"c30",type:"CHALLENGE",emoji:"😉",text:"ክፍሉ ውስጥ ያሉ ሰዎች ሁሉ ሳትስቅ ፊታቸዉን እያየህ ዓይን ጥቅሻ (Wink) ሰላም ስጣቸው!",cat:"ፈተና",rarity:"common"},
+  // ── PROVERBS — አባባሎች ──
+  {id:"p01",type:"proverb",emoji:"📜",text:"የሚቸኵል ይወድቃል።",sub:"ቸኵሎ ለሚሄድ ወዳቂ ይሆናል። ትዕግስት ድልን ይሸልማል።",cat:"አባባል",rarity:"common"},
+  {id:"p02",type:"proverb",emoji:"🤲",text:"ጎረቤት ሲጠፋ ዘመድ ይረሳል።",sub:"ቅርብ ሰው ዘወትር ወሳኝ ነው።",cat:"አባባል",rarity:"rare"},
+  {id:"p03",type:"proverb",emoji:"☕",text:"አፍ ካሞቀ ቡናም ያሞቃል።",sub:"ወዳጅ ነፍሳትን ያሞቃል።",cat:"አባባል",rarity:"common"},
+  {id:"p04",type:"proverb",emoji:"🧓",text:"እድሜ ሲረዝም ጥበብ ይጨምራል።",sub:"ልምድ ዋጋ አለው።",cat:"አባባል",rarity:"rare"},
+  {id:"p05",type:"proverb",emoji:"🏡",text:"ቤት ቤቱ ያሸብርቃል — ሰው ሰዉ ያናፍቃል።",sub:"ምኞት ሁሉ ሰዉ ውስጥ አለ።",cat:"አባባል",rarity:"epic"},
+  {id:"p06",type:"proverb",emoji:"🕰️",text:"ቀን ጠብቆ የሚሠራ ደስ ይሆናል።",sub:"ትዕግስት ሁሉ ድሎ ነው።",cat:"አባባል",rarity:"common"},
+  {id:"p07",type:"proverb",emoji:"🌧️",text:"ዝናብ ቢበዛ ምድር ትፈነዳለች — ፍቅር ቢበዛ ልብ ይፈነዳል።",sub:"ሚዛን ሁሉ ጠቃሚ ነው።",cat:"አባባል",rarity:"epic"},
+  // ── RIDDLES — እንቆቅልሽ ──
+  {id:"r01",type:"riddle",emoji:"🤔",text:"ሳይወሰዱ ሳይሰጡ ሁሉ ሰው ያነሳዋል — ምንድን ነው?",sub:"👁 ፍቅሩ ወይስ ሰላምታ?",cat:"እንቆቅልሽ",rarity:"common"},
+  {id:"r02",type:"riddle",emoji:"🤔",text:"ለኔ ቢሆን ቤት ለሌላ ቢሆን ቤት — ምንድን ነው?",sub:"👁 ሰም ወይስ ጥላ?",cat:"እንቆቅልሽ",rarity:"common"},
+  {id:"r03",type:"riddle",emoji:"🤔",text:"ሲሞት ሲሞት ሲደርሱበት ሕያው — ምንድን ነው?",sub:"👁 ሻሙ ወይስ ቃሉ?",cat:"እንቆቅልሽ",rarity:"rare"},
+  {id:"r04",type:"riddle",emoji:"🤔",text:"ውሃ ቢወርደው አያልቅም — ምንድን ነው?",sub:"👁 ጠለፋ ወይስ ቀለም?",cat:"እንቆቅልሽ",rarity:"common"},
+  {id:"r05",type:"riddle",emoji:"🤔",text:"አራት ደረጃ አለው — ሶስቱ ሲደርሱ አንዱ ይቀራል — ምንድን ነው?",sub:"👁 ቡናው ዙር?",cat:"እንቆቅልሽ",rarity:"epic"},
+  // ── HUMOR — አስቀልቃይ ──
+  {id:"h01",type:"humor",emoji:"😂",text:"ኢትዮጵያዊ WiFi ምን ይመስላል? «ኔትዎርክ ያለ» ብሎ ኔት የለም! 😂",cat:"ሳቅ",rarity:"common"},
+  {id:"h02",type:"humor",emoji:"🤣",text:"«ቶሎ እጣለሁ» ብሎ ቁጭ ያለ ሰው ምን ዓይነት ሰው ነው? — አዲስ አበቤ! 🤣",cat:"ሳቅ",rarity:"common"},
+  {id:"h03",type:"humor",emoji:"😭",text:"ቡና ቤት «ቀስ ብሎ» ሲያስቀምጥ 2 ሰዓት ሆነ — ቡናው ሳይቀዘቅዝ ሲፈጅ! 😭",cat:"ሳቅ",rarity:"rare"},
+  {id:"h04",type:"humor",emoji:"😅",text:"«ወዳጄ እዚህ ነኝ» ካለ — ስልኩን ሲሰሙ ጸጥ አለ! 😅",cat:"ሳቅ",rarity:"common"},
+  {id:"h05",type:"humor",emoji:"😄",text:"ዝናብ ዘምቶ ሲበዛ — ሁሉ ሰው ቡና ቤት ሲሮጥ — ቡና ቤቱ ምርጥ ሺፍ ነው! 😄",cat:"ሳቅ",rarity:"epic"},
+  // ── COFFEE CEREMONY ──
+  {id:"cf01",type:"coffee",emoji:"☕",text:"ቡናው ዛሬ ወፈ ሲሆን — ልብህ ምን ይናገር? ለጎረቤትህ ንገር።",cat:"ቡና",rarity:"rare"},
+  {id:"cf02",type:"coffee",emoji:"🏺",text:"ሦስቱ ዙሮች — አቡካቶ፣ ጠና፣ በሬካ — የጨዋታህ ዙርም እዚያ ደረሰ!",cat:"ቡና",rarity:"epic"},
+  {id:"cf03",type:"coffee",emoji:"☕",text:"ጁቤ ቡና ሲሰጥ ምን ትሰማለህ — ፍቅር ወይስ ዕዳ? 😄",cat:"ቡና",rarity:"common"},
+  {id:"cf04",type:"coffee",emoji:"☕",text:"ቡናህን ሳታጠናቅቅ የጀምርሃቸው ነገሮች ስንት ናቸው?",cat:"ቡና",rarity:"rare"},
+];
+
+/* ═══════════════════════════════════════════════════════
+   GAME CONFIG
+═══════════════════════════════════════════════════════ */
+const CFG = {
+  cardsPerGame: 20,
+  stages: ["ቡና ተቀጥሏል","መካከለኛ ዙር","መጨረሻ ዙር"],
+  icons:  ["🏺","☕","🎉"],
+};
+
+const TYPE_META = {
+  QUESTION: {label:"ጥያቄ",    icon:"❓", pts:1},
+  TRUTH:    {label:"እውነት",   icon:"💡", pts:2},
+  CHALLENGE:{label:"ፈተና",    icon:"🔥", pts:3},
+  proverb:  {label:"አባባል",   icon:"📜", pts:1},
+  riddle:   {label:"እንቆቅልሽ",icon:"🤔", pts:2},
+  humor:    {label:"ሳቅ",      icon:"😂", pts:1},
+  coffee:   {label:"ቡና",      icon:"☕", pts:1},
+};
+const TYPE_KEYS = Object.keys(TYPE_META);
+const RARITY_W = {common:1, rare:2.5, epic:4};
+const RARITY_L = {common:"ተራ", rare:"⭐ ብርቅ", epic:"🔥 ልዩ"};
+const AVTS = ['🦁','🐯','🐸','🦊','🐺','🦝','🐻','🐼','🦄','🐙'];
+const MP_PTS = {QUESTION:1, TRUTH:2, CHALLENGE:3, proverb:1, riddle:2, humor:1, coffee:1};
+const SK='ne5',MPK='ne5mp';
+
+/* ── STATE ── */
+let S = {
+  started:false, deck:[], idx:0, score:0, streak:0,
+  filter:"all", finished:false, cur:null,
+};
+let MP = {active:false, players:[], idx:0, round:1};
+
+/* ── STORAGE ── */
+function lsSave(){try{localStorage.setItem(SK,JSON.stringify({score:S.score}))}catch{}}
+function mpSave(){try{localStorage.setItem(MPK,JSON.stringify(MP))}catch{}}
+function mpLoad(){try{const r=localStorage.getItem(MPK);if(r)MP=Object.assign(MP,JSON.parse(r))}catch{}}
+
+/* ── HELPERS ── */
+const $  = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+function weightedShuffle(arr) {
+  return arr.map(c=>({c,w:Math.random()*(RARITY_W[c.rarity]||1)}))
+    .sort((a,b)=>b.w-a.w).map(x=>x.c);
+}
+function buildDeck(f="all"){
+  let pool = f==="all" ? CARDS : CARDS.filter(c=>c.type===f);
+  if(!pool.length) pool=CARDS;
+  return weightedShuffle(pool).slice(0,CFG.cardsPerGame);
+}
+function getStage(i,total){
+  const p=i/total;
+  return p<0.33?0:p<0.67?1:2;
+}
+
+/* ── RENDER CARD ── */
+function makeCard(card, isWelcome=false) {
+  if(isWelcome){
+    return `<div class="card welcome card-in" style="border-color:var(--tej-light)">
+      <div class="card-stripe"></div>
+      <span style="font-size:3rem;margin-bottom:8px">☕</span>
+      <div class="card-text">እንኳን ደህና መጣህ!<br>ኑ እንጫወት</div>
+      <div class="card-sub">ቡና ቤት ጫወታ · ጎረቤት ጫወታ<br>ካርዶቹን ጎተት እና ጨዋታ ጀምር</div>
+      <button class="btn btn-start" onclick="startGame()">ጨዋታ እንጀምር ☕</button>
+    </div>`;
+  }
+  const m = TYPE_META[card.type]||TYPE_META.QUESTION;
+  const rLbl = card.rarity!=="common"?`<div class="rarity-label">${RARITY_L[card.rarity]||""}</div>`:"";
+  const sub = card.sub?`<div class="card-sub">${card.sub}</div>`:"";
+  return `<div class="card card-in" data-type="${card.type}" data-rarity="${card.rarity||"common"}">
+    <div class="card-stripe"></div>
+    <span class="type-badge"><span>${m.icon}</span>${m.label}</span>
+    <div class="card-emoji" aria-hidden="true">${card.emoji||"🎴"}</div>
+    <div class="card-text">${card.text}</div>
+    ${sub}
+    ${rLbl}
+    <div class="card-sub" style="font-size:0.62rem;margin-top:4px;opacity:0.5">${card.cat||""}</div>
+  </div>`;
+}
+function makeWinScreen(score, total){
+  return `<div class="win-screen card-in">
+    <span class="win-crown">👑</span>
+    <div class="win-title">ዛሬ አንተ ነህ ንጉሥ!</div>
+    <div class="win-sub">ጨዋታው ተጠናቋል። ቡናህ ትኩስ ሆኖ ይቆይ!</div>
+    <div class="win-stats">
+      <div class="win-stat"><span class="win-num">${score}</span><span class="win-lbl">ነጥብ</span></div>
+      <div class="win-stat"><span class="win-num">${total}</span><span class="win-lbl">ካርዶች</span></div>
+    </div>
+  </div>`;
+}
+
+/* ── UI UPDATE ── */
+function showCard(){
+  const area = $("#card-area");
+  const existing = area.querySelector(".card");
+  if(existing){
+    existing.classList.remove("card-in");
+    existing.classList.add("card-out");
+    setTimeout(()=>_renderCard(area),220);
+  } else {
+    _renderCard(area);
+  }
+}
+function _renderCard(area){
+  if(!S.started){ area.innerHTML=makeCard(null,true); return; }
+  if(S.finished){ area.innerHTML=makeWinScreen(S.score,S.deck.length); return; }
+  const card = S.deck[S.idx];
+  if(!card){ S.finished=true; _renderCard(area); return; }
+  S.cur=card;
+  area.innerHTML=makeCard(card);
+  if(MP.active) renderMPUI();
+}
+
+function updateStageBar(){
+  const si = getStage(S.idx, S.deck.length);
+  $("#stage-label").textContent = CFG.stages[si];
+  $("#jebena").textContent = CFG.icons[si];
+  $("#score-badge").textContent = S.score + " ነጥብ";
+  const dots=$("#stage-dots"); dots.innerHTML="";
+  for(let i=0;i<3;i++){
+    const d=document.createElement("div");
+    d.className="sdot"+(i<si?" done":i===si?" active":"");
+    dots.appendChild(d);
+  }
+}
+function updateProgress(){
+  const pct = S.deck.length ? (S.idx/S.deck.length)*100 : 0;
+  $("#prog-fill").style.width = pct+"%";
+  $("#prog-txt").textContent = S.idx+" / "+S.deck.length;
+}
+function updateButtons(){
+  const row=$("#btn-row");
+  if(!S.started){row.innerHTML="";return}
+  if(S.finished){
+    row.innerHTML=`<button class="btn btn-start" onclick="resetGame()">🔄 እንደገና</button>`;
+    return;
+  }
+  row.innerHTML=`
+    <button class="btn btn-secondary" onclick="resetGame()" aria-label="Reset">⟳ እንደገና</button>
+    <button class="btn btn-primary" onclick="nextCard()" ${S.idx>=S.deck.length?"disabled":""}>ቀጣይ ➜</button>`;
+}
+function renderFilters(){
+  const row=$("#filter-row"); row.innerHTML="";
+  const types=["all",...TYPE_KEYS];
+  const labels={all:"ሁሉ",QUESTION:"ጥያቄ",TRUTH:"እውነት",CHALLENGE:"ፈተና",proverb:"አባባል",riddle:"እንቆቅልሽ",humor:"ሳቅ",coffee:"ቡና"};
+  types.forEach(t=>{
+    const b=document.createElement("button");
+    b.className="chip"+(S.filter===t?" on":"");
+    b.textContent=labels[t]||t;
+    b.onclick=()=>setFilter(t);
+    row.appendChild(b);
+  });
+}
+
+/* ── GAME FLOW ── */
+function startGame(){
+  S.started=true; S.deck=buildDeck(S.filter); S.idx=0; S.score=0; S.streak=0; S.finished=false;
+  $("#stage-bar").classList.add("visible");
+  $("#filter-row").classList.add("visible");
+  $("#progress-row").classList.add("visible");
+  updateStageBar(); updateProgress(); renderFilters(); showCard(); updateButtons();
+}
+async function nextCard(){
+  if(S.finished||!S.started) return;
+  const m=TYPE_META[S.cur?.type]||TYPE_META.QUESTION;
+  S.score += m.pts; S.streak++;
+  lsSave();
+  if(S.streak>1) addStreakBadge();
+  S.idx++;
+  if(S.idx>=S.deck.length){ S.finished=true; playSoundWin(); }
+  else playSoundTap();
+  updateStageBar(); updateProgress(); showCard(); updateButtons();
+  if(MP.active && !S.finished) mpAutoNext();
+}
+function setFilter(f){
+  S.filter=f; S.deck=buildDeck(f); S.idx=0; S.score=0; S.streak=0; S.finished=false;
+  renderFilters(); updateStageBar(); updateProgress(); showCard(); updateButtons();
+  $("#streak-row").innerHTML="";
+  showToast("ካርዶቹ ታድሰዋል ✓");
+}
+function resetGame(){
+  S.started=false; S.deck=[]; S.idx=0; S.score=0; S.streak=0; S.finished=false;
+  $("#stage-bar").classList.remove("visible");
+  $("#filter-row").classList.remove("visible");
+  $("#progress-row").classList.remove("visible");
+  $("#streak-row").innerHTML=""; $("#btn-row").innerHTML="";
+  showCard(); showToast("ጨዋታ ታድሷል ✓");
+}
+function addStreakBadge(){
+  const row=$("#streak-row");
+  const b=document.createElement("div"); b.className="streak-badge";
+  b.textContent=S.streak+"× ሰልፍ! ✨"; row.appendChild(b);
+  setTimeout(()=>b.remove(),2500);
+}
+
+/* ── TOAST ── */
+let _tt;
+function showToast(msg){
+  const e=$("#toast"); e.textContent=msg; e.classList.add("show");
+  clearTimeout(_tt); _tt=setTimeout(()=>e.classList.remove("show"),2400);
+}
+
+/* ── SOUND ── */
+let _ac;
+function getAC(){if(!_ac)try{_ac=new(window.AudioContext||window.webkitAudioContext)()}catch{}; return _ac}
+function playSoundTap(){
+  const c=getAC();if(!c)return;
+  const o=c.createOscillator(), g=c.createGain();
+  o.connect(g);g.connect(c.destination);
+  o.frequency.setValueAtTime(660,c.currentTime);
+  o.frequency.exponentialRampToValueAtTime(380,c.currentTime+0.1);
+  g.gain.setValueAtTime(0.1,c.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.14);
+  o.start();o.stop(c.currentTime+0.14);
+}
+function playSoundWin(){
+  const c=getAC();if(!c)return;
+  [523,659,784,1047].forEach((f,i)=>{
+    const o=c.createOscillator(),g=c.createGain();
+    o.type="triangle";o.connect(g);g.connect(c.destination);
+    o.frequency.setValueAtTime(f,c.currentTime+i*0.15);
+    g.gain.setValueAtTime(0.12,c.currentTime+i*0.15);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+i*0.15+0.3);
+    o.start(c.currentTime+i*0.15);o.stop(c.currentTime+i*0.15+0.3);
+  });
+}
+
+/* ── KEYBOARD ── */
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight"||e.key==="Enter"||e.key===" "){
+    e.preventDefault();
+    if(!S.started) startGame(); else nextCard();
+  }
+  if(e.key==="r"||e.key==="R") resetGame();
+  if(e.key==="Escape") resetGame();
+});
+
+/* ═══════════════════════════════════════════════════════
+   MULTIPLAYER — Coffee House Turn Tracker & Scoring
+═══════════════════════════════════════════════════════ */
+function renderMPUI(){
+  const sb=$("#mp-sb"); sb.innerHTML="";
+  MP.players.forEach((p,i)=>{
+    const c=document.createElement("div");
+    c.className="sc"+(i===MP.idx?" cur":"");
+    c.innerHTML=`<div class="sc-av">${p.av}</div><div class="sc-nm">${p.name}</div><div class="sc-pt">${p.score}</div>`;
+    sb.appendChild(c);
+  });
+  const cur=MP.players[MP.idx];
+  if(cur){
+    $("#mp-who").textContent=cur.av+" "+cur.name;
+    $("#mp-rnd").textContent="ዙር "+MP.round+" · ተራ "+(MP.idx+1)+"/"+MP.players.length;
+  }
+}
+function mpGivePoint(){
+  if(S.cur){
+    const pts=MP_PTS[S.cur.type]||1;
+    MP.players[MP.idx].score+=pts;
+    showPtToast("+"+pts+"pt "+MP.players[MP.idx].av);
+  }
+  mpAdvance();
+}
+function mpAdvance(){
+  MP.idx=(MP.idx+1)%MP.players.length;
+  if(MP.idx===0) MP.round++;
+  mpSave(); renderMPUI();
+}
+function mpAutoNext(){mpAdvance()}
+function mpEndGame(){
+  MP.active=false; mpSave();
+  $("#mp-panel").classList.remove("playing");
+  $("#mp-bdg").textContent="OFF";
+  const sorted=[...MP.players].sort((a,b)=>b.score-a.score);
+  const top=sorted[0];
+  const tie=sorted.length>1&&sorted[0].score===sorted[1].score;
+  $("#w-h").textContent=tie?"🤝 እኩለኛ ሽልማት":"🏆 አሸናፊ";
+  $("#w-ge").textContent=tie?"— ሁለቱም ጠንካሮች ናቸው —":"— እንኳን ደስ አለህ/ሽ —";
+  $("#w-name").textContent=tie
+    ?sorted.filter(p=>p.score===top.score).map(p=>p.av+" "+p.name).join(" · ")
+    :top.av+" "+top.name;
+  $("#w-scores").innerHTML=sorted.map(p=>`${p.av} ${p.name}: <b>${p.score} ነጥብ</b>`).join("<br>");
+  $("#win-ov").classList.add("show");
+}
+let _pt;
+function showPtToast(msg){
+  const t=$("#pt-toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(_pt); _pt=setTimeout(()=>t.classList.remove("show"),2000);
+}
+function renderChips(){
+  const c=$("#mp-chips"); c.innerHTML="";
+  MP.players.forEach((p,i)=>{
+    const ch=document.createElement("div"); ch.className="pchip";
+    ch.innerHTML=`${p.av} ${p.name} <span class="pchip-x" data-i="${i}">×</span>`;
+    ch.querySelector(".pchip-x").onclick=()=>{MP.players.splice(i,1);renderChips()};
+    c.appendChild(ch);
+  });
+}
+/* events */
+$("#mp-toggle").onclick=()=>$("#mp-panel").classList.toggle("open");
+const mpI=$("#mp-inp");
+function addPlayer(){
+  const n=mpI.value.trim();
+  if(!n){showToast("ስም ያስፈልጋል");return}
+  if(MP.players.length>=10)return;
+  MP.players.push({name:n,score:0,av:AVTS[MP.players.length%AVTS.length]});
+  mpI.value="";mpI.focus();renderChips();
+}
+$("#mp-add").onclick=addPlayer;
+mpI.addEventListener("keydown",e=>{if(e.key==="Enter")addPlayer()});
+$("#mp-start").onclick=()=>{
+  if(MP.players.length<2){showToast("ቢያንስ 2 ተጫዋቾች ያስፈልጋሉ");return}
+  MP.active=true;MP.idx=0;MP.round=1;
+  MP.players.forEach(p=>p.score=0);mpSave();
+  const panel=$("#mp-panel");
+  panel.classList.add("playing","open");
+  $("#mp-bdg").textContent=MP.players.length+"P";
+  renderMPUI();
+  if(!S.started) startGame();
+};
+$("#mp-gpt").onclick=mpGivePoint;
+$("#mp-nxt").onclick=()=>{mpAdvance(); if(S.started&&!S.finished) nextCard()};
+$("#mp-end").onclick=()=>{if(confirm("ጨዋታ ያቁሙ?"))mpEndGame()};
+$("#win-ov").addEventListener("click",e=>{if(e.target.id==="win-ov")$("#win-ov").classList.remove("show")});
+$("#mp-again").onclick=()=>{
+  $("#win-ov").classList.remove("show");
+  MP.players.forEach(p=>p.score=0);
+  MP.active=true;MP.idx=0;MP.round=1;mpSave();
+  $("#mp-panel").classList.add("playing","open");
+  $("#mp-bdg").textContent=MP.players.length+"P";
+  renderMPUI(); resetGame(); startGame();
+};
+
+/* ═══════════════════════════════════════════════════════
+   PWA — Inline Manifest + Service Worker
+═══════════════════════════════════════════════════════ */
+const manifest = {
+  name:"ኑ እንጫወት",short_name:"ኑ እንጫወት",
+  description:"Ethiopian social card game for family and friends",
+  start_url:".",display:"standalone",
+  background_color:"#F5EDD6",theme_color:"#8B1A1A",
+  icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>",sizes:"192x192",type:"image/svg+xml"}]
+};
+document.getElementById("manifest-link").href=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:"application/json"}));
+if("serviceWorker" in navigator){
+  const sw=`const V='ne-v1';self.addEventListener('install',e=>e.waitUntil(caches.open(V).then(c=>c.addAll(['.']))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('.')))))`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:"application/javascript"}))).catch(()=>{});
+}
+
+/* ── SWIPE GESTURE ── */
+let _sy=0,_sx=0;
+document.addEventListener("touchstart",e=>{_sy=e.touches[0].clientY;_sx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",e=>{
+  const dy=_sy-e.changedTouches[0].clientY;
+  const dx=_sx-e.changedTouches[0].clientX;
+  if(Math.abs(dy)>50&&Math.abs(dy)>Math.abs(dx)){
+    if(dy>0){ if(!S.started)startGame(); else nextCard(); }
+  }
+},{passive:true});
+
+/* ── BOOT ── */
+mpLoad();
+if(MP.active){
+  $("#mp-panel").classList.add("playing");
+  $("#mp-bdg").textContent=MP.players.length+"P";
+  renderChips(); renderMPUI();
+} else { renderChips(); }
+showCard();
+</script>
+</body>
+</html>
